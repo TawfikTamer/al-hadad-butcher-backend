@@ -7,14 +7,14 @@ const adminRouter = Router();
 
 adminRouter.post("/signIn", AdminService.signIn);
 
-adminRouter.put(
+adminRouter.post(
   "/add-product",
   authenticationMiddleware,
   localUpload({ path: "product Images" }).single("product_Image"),
   AdminService.addProduct
 );
 
-adminRouter.post(
+adminRouter.patch(
   "/update-product/:productID",
   authenticationMiddleware,
   localUpload({ path: "product Images" }).single("product_Image"),

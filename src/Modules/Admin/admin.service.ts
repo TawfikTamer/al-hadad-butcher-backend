@@ -36,10 +36,10 @@ class AdminService {
     res
       .status(200)
       .cookie("accesstoken", accesstoken, {
-        httpOnly: true, // Prevents JavaScript from accessing it
-        secure: true, // Only send over HTTPS
-        sameSite: "strict", // CSRF protection
-        maxAge: 3600000, // 1 hour in milliseconds
+        httpOnly: true, // Prevent client-side access
+        sameSite: "lax",
+        secure: false, // true in production
+        maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       })
       .json(SuccessResponse("logged in succeccfully", 200, { accesstoken }));
   };

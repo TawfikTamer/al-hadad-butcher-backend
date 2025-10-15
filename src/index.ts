@@ -12,18 +12,18 @@ const app = express();
 dbConnection();
 
 // // Handle CORS
-// const whitelist = process.env.WHITELIST;
-// const corsOptions = {
-//   origin: function (origin: any, callback: any) {
-//     if (whitelist?.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-// };
+const whitelist = process.env.WHITELIST;
+const corsOptions = {
+  origin: function (origin: any, callback: any) {
+    if (whitelist?.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
