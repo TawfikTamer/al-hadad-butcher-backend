@@ -7,6 +7,8 @@ const adminRouter = Router();
 
 adminRouter.post("/signIn", AdminService.signIn);
 
+adminRouter.get("/userAuth", authenticationMiddleware, AdminService.userAuth);
+
 adminRouter.post(
   "/add-product",
   authenticationMiddleware,

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ProductRepository } from "../../DB/Repositories/products.repository";
-import { IProduct } from "../../Common";
+import { IAuthRequest, IProduct } from "../../Common";
 import {
   BadRequestException,
   generateToken,
@@ -115,7 +115,7 @@ class AdminService {
     if (!product) throw new BadRequestException("this product is not exist");
 
     // delete the image of the product
-    if (product.imagePath && product.imagePath != "No path") {
+    if (product.imagePath && product.imagePath != "NO path") {
       fs.unlinkSync(product.imagePath as string);
     }
 
@@ -125,6 +125,13 @@ class AdminService {
     return res
       .status(200)
       .json(SuccessResponse("product has been deleted", 200));
+  };
+
+  userAuth = async (req: Request, res: Response) => {
+    const user = (req as IAuthRequest).loggedInUser;
+    return res
+      .status(200)
+      .json(SuccessResponse("logged in user", 200, { user }));
   };
 }
 
