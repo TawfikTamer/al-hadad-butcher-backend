@@ -90,104 +90,51 @@ class AdminService {
   };
 
   updateProduct = async (req: Request, res: Response) => {
-    try {
-      const { name, price, description, category } = req.body;
-      const { productID } = req.params;
-      const imagefile = req.file;
+    const { name, price, description, category }: Partial<IProduct> = req.body;
+    const { productID } = req.params;
+    const imagefile = req.file;
 
-      // Validate productID
-      if (!productID) {
-        throw new BadRequestException("Product ID is required");
-      }
+    // check if the product is not exist
+    const product = await this.productsRep.findOneDocument(
+      { _id: productID },
+      "-__v -createdAt -updatedAt -isAvailable "
+    );
+    if (!product) throw new BadRequestException("this product is not exist");
 
-      // Check if the product exists
-      const product = await this.productsRep.findOneDocument(
-        { _id: productID },
-        "-__v -createdAt -updatedAt -isAvailable"
-      );
-
-      if (!product) {
-        throw new BadRequestException("This product does not exist");
-      }
-
-      // Update fields only if they are provided
-      if (name) product.name = name;
-      if (price) product.price = price;
-      if (description) product.description = description;
-      if (category) product.category = category;
-
-      // Handle image update
-      if (imagefile) {
-        // Delete old image if it exists
-        if (product.imagePath && product.imagePath !== "No path") {
-          try {
-            fs.unlinkSync(product.imagePath as string);
-          } catch (err) {
-            console.error("Error deleting old image:", err);
-          }
-        }
-        product.image = imagefile.filename;
-        product.imagePath = imagefile.path;
-      }
-
-      // Save the updated product
-      await product.save();
-
-      // Prepare response without sensitive data
-      const productResponse = product.toObject();
-      delete productResponse.imagePath;
-
-      return res
-        .status(200)
-        .json(
-          SuccessResponse(
-            "Product has been updated successfully",
-            200,
-            productResponse
-          )
-        );
-    } catch (error) {
-      console.error("Update product error:", error);
-      throw error;
+    if (name) product.name = name;
+    if (price) product.price = price;
+    if (description) product.description = description;
+    if (category) product.category = category;
+    if (imagefile) {
+      product.image = imagefile.filename;
+      product.imagePath = imagefile.path;
     }
+    product.save();
+    const productResponse = product.toObject();
+    productResponse.imagePath = undefined;
+
+    return res
+      .status(200)
+      .json(SuccessResponse("product has updated", 200, productResponse));
   };
 
   deleteProduct = async (req: Request, res: Response) => {
-    try {
-      const { productID } = req.params;
+    const { productID } = req.params;
 
-      // Validate productID
-      if (!productID) {
-        throw new BadRequestException("Product ID is required");
-      }
+    const product = await this.productsRep.findOneDocument({ _id: productID });
+    if (!product) throw new BadRequestException("this product is not exist");
 
-      const product = await this.productsRep.findOneDocument({
-        _id: productID,
-      });
-      if (!product) {
-        throw new BadRequestException("This product does not exist");
-      }
-
-      // Delete the image of the product
-      if (product.imagePath && product.imagePath !== "No path") {
-        try {
-          fs.unlinkSync(product.imagePath as string);
-        } catch (err) {
-          console.error("Error deleting image:", err);
-          // Continue with product deletion even if image deletion fails
-        }
-      }
-
-      // Delete the product
-      await product.deleteOne();
-
-      return res
-        .status(200)
-        .json(SuccessResponse("Product has been deleted successfully", 200));
-    } catch (error) {
-      console.error("Delete product error:", error);
-      throw error;
+    // delete the image of the product
+    if (product.imagePath && product.imagePath != "NO path") {
+      fs.unlinkSync(product.imagePath as string);
     }
+
+    // delete the product
+    await product.deleteOne();
+
+    return res
+      .status(200)
+      .json(SuccessResponse("product has been deleted", 200));
   };
 
   userAuth = async (req: Request, res: Response) => {

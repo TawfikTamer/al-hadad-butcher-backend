@@ -28,6 +28,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use("/photos", express.static("Uploads/product Images"));
 app.use("/api/admin", adminRouter);
 app.use("/api/products", productRouter);
 

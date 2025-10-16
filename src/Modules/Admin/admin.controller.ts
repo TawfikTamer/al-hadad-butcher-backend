@@ -13,7 +13,7 @@ adminRouter.post("/logOut", authenticationMiddleware, AdminService.logOut);
 adminRouter.post(
   "/add-product",
   authenticationMiddleware,
-  localUpload({ path: "product Images" }).single("product_Image"),
+  localUpload({ path: "product Images" }).single("image"),
   AdminService.addProduct
 );
 
