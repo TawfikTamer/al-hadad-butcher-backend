@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { BadRequestException, verifyToken } from "../Utils";
+import { IAuthRequest } from "../Common";
 
 export const authenticationMiddleware = async (
   req: Request,
@@ -15,6 +16,8 @@ export const authenticationMiddleware = async (
     process.env.JWT_ACCESS_KEY as string
   );
   if (!decodedData.jti) throw new BadRequestException("invalid token");
+
+  (req as IAuthRequest).loggedInUser = { decodedData };
 
   next();
 };

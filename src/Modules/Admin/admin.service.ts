@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ProductRepository } from "../../DB/Repositories/products.repository";
-import { IProduct } from "../../Common";
+import { IAuthRequest, IProduct } from "../../Common";
 import {
   BadRequestException,
   generateToken,
@@ -178,6 +178,13 @@ class AdminService {
       console.error("Delete product error:", error);
       throw error;
     }
+  };
+
+  userAuth = async (req: Request, res: Response) => {
+    const user = (req as IAuthRequest).loggedInUser;
+    return res
+      .status(200)
+      .json(SuccessResponse("logged in user", 200, { user }));
   };
 }
 
