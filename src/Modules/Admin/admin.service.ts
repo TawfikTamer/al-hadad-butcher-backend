@@ -44,6 +44,16 @@ class AdminService {
       .json(SuccessResponse("logged in succeccfully", 200, { accesstoken }));
   };
 
+  logOut = async (req: Request, res: Response) => {
+    res.clearCookie("accesstoken", {
+      httpOnly: true, // Prevent client-side access
+      sameSite: "lax",
+      secure: false, // true in production
+    });
+
+    res.status(200).json(SuccessResponse("Logged out successfully", 200));
+  };
+
   addProduct = async (req: Request, res: Response) => {
     const { name, price, description, category }: Partial<IProduct> = req.body;
     const imagefile = req.file;
