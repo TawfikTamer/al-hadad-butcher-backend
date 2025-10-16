@@ -20,7 +20,7 @@ adminRouter.post(
 adminRouter.patch(
   "/update-product/:productID",
   authenticationMiddleware,
-  localUpload({ path: "product Images" }).single("product_Image"),
+  localUpload({ path: "product Images" }).single("image"),
   AdminService.updateProduct
 );
 
