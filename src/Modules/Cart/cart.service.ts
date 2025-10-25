@@ -1,17 +1,22 @@
 import { Request, Response } from "express";
-import { CartRepository } from "../../DB/Repositories";
+import { CartRepository, ProductRepository } from "../../DB/Repositories";
 import { IAuthRequest, ICartItem } from "../../Common";
 import mongoose from "mongoose";
-import { SuccessResponse } from "../../Utils";
+import { BadRequestException, SuccessResponse } from "../../Utils";
 
 class CartService {
   cartRepo = new CartRepository();
+  productRepo = new ProductRepository();
 
   addToCart = async (req: Request, res: Response) => {
     const { cartDoc, token } = (req as IAuthRequest).loggedInUser;
     let { productId, quantity, price } = req.body;
 
     productId = new mongoose.Types.ObjectId(productId);
+
+    const isAvailable = await this.productRepo.findDocumentById(productId);
+    if (!isAvailable)
+      throw new BadRequestException("this product is not valid");
 
     const newItem: ICartItem = { productId, quantity, price };
     cartDoc?.items?.push(newItem);
@@ -29,7 +34,7 @@ class CartService {
       .json(SuccessResponse("added to cart", 200, { cartDoc }));
   };
 
-  listCart = (req: Request, res: Response) => {
+  listCart = async (req: Request, res: Response) => {
     const { cartDoc, token } = (req as IAuthRequest).loggedInUser;
 
     res

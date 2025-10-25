@@ -17,9 +17,12 @@ export abstract class BaseRepository<T> {
   async findOneDocument(
     filter: FilterQuery<T>,
     projection?: ProjectionType<T>,
-    options?: QueryOptions
+    options?: QueryOptions,
+    path?: string | string[]
   ): Promise<T | null> {
-    return await this.model.findOne(filter, projection, options);
+    return await this.model
+      .findOne(filter, projection, options)
+      .populate(path!);
   }
 
   async findDocuments(
