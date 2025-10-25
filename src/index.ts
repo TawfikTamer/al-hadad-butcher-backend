@@ -3,7 +3,7 @@ import express, { Response, Request, NextFunction } from "express";
 import cors from "cors";
 import { dbConnection } from "./DB/db.connection";
 import { FailedResponse, HttpException } from "./Utils";
-import { adminRouter, productRouter } from "./Modules";
+import { adminRouter, productRouter, cartRoute } from "./Modules";
 
 import cookieParser from "cookie-parser";
 
@@ -31,6 +31,7 @@ app.use(cookieParser());
 app.use("/photos", express.static("Uploads/product Images"));
 app.use("/api/admin", adminRouter);
 app.use("/api/products", productRouter);
+app.use("/api/cart", cartRoute);
 
 app.use((_req, res) => {
   res.status(404).json({ msg: "Route not found" });
@@ -49,7 +50,9 @@ app.use(
         .json(FailedResponse(err.message, err.statusCode, err.error));
     }
     console.log(err);
-    res.status(500).json(FailedResponse("Somthing Went Wrong", 500, err));
+    res
+      .status(500)
+      .json(FailedResponse("Somthing Went Wrong", 500, err?.message));
   }
 );
 
