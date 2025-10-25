@@ -30,9 +30,17 @@ class CartService {
   };
 
   listCart = (req: Request, res: Response) => {
-    const { cartDoc } = (req as IAuthRequest).loggedInUser;
+    const { cartDoc, token } = (req as IAuthRequest).loggedInUser;
 
-    res.status(200).json(SuccessResponse("here is your cart", 200, cartDoc));
+    res
+      .status(200)
+      .cookie("guestUser", token, {
+        httpOnly: true, // Prevent client-side access
+        sameSite: "lax",
+        secure: false, // true in production
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
+      })
+      .json(SuccessResponse("here is your cart", 200, cartDoc));
   };
 
   confirmOrder = (req: Request, res: Response) => {};

@@ -15,9 +15,10 @@ export const authorizationMiddleware = async (
 
   const cartRepo = new CartRepository();
   let cartDoc;
+  const tokenId = uuidv4();
+
   if (!guestUserToken) {
     // create new token for the user
-    const tokenId = uuidv4();
     guestUserToken = generateToken(
       {
         userID: `user_${tokenId}`,
@@ -41,6 +42,13 @@ export const authorizationMiddleware = async (
     );
 
     cartDoc = await cartRepo.findOneDocument({ userID: decodedData.userID });
+
+    if (!cartDoc) {
+      // create the user id
+      cartDoc = await cartRepo.createNewDocument({
+        userID: decodedData.userID,
+      });
+    }
   }
 
   (req as IAuthRequest).loggedInUser = { cartDoc, token: guestUserToken };
