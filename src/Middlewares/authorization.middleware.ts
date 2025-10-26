@@ -41,12 +41,7 @@ export const authorizationMiddleware = async (
       process.env.JWT_USER_GUEST_KEY as string
     );
 
-    cartDoc = await cartRepo.findOneDocument(
-      { userID: decodedData.userID },
-      {},
-      {},
-      "items.productId"
-    );
+    cartDoc = await cartRepo.findOneDocument({ userID: decodedData.userID });
     if (cartDoc?.items) {
       cartDoc.items = cartDoc.items.filter((item) => item.productId !== null);
       await cartDoc.save();
