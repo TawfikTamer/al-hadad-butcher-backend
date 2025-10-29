@@ -13,7 +13,7 @@ class CartService {
     let { productId, quantity, price } = req.body;
 
     productId = new mongoose.Types.ObjectId(productId);
-    quantity = quantity < 0.25 ? 1 : quantity;
+    quantity = quantity < 0.25 ? 0.25 : quantity;
 
     const isAvailable = await this.productRepo.findDocumentById(productId);
     if (!isAvailable)
@@ -89,7 +89,7 @@ class CartService {
     let { productId, quantity } = req.body;
 
     productId = new mongoose.Types.ObjectId(productId);
-    quantity = quantity < 0.25 ? 1 : quantity;
+    quantity = quantity < 0.25 ? 0.25 : quantity;
     const isAvailable = await this.productRepo.findDocumentById(productId);
     if (!isAvailable)
       throw new BadRequestException("this product is not valid");
