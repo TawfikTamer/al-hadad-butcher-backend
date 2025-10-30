@@ -15,4 +15,6 @@ export interface IOrders extends Document {
   address: string;
   additionalInfo?: string;
   orderItem: IOrderItem[];
+  userID: string;
+  deletedByAdmin: boolean;
 }

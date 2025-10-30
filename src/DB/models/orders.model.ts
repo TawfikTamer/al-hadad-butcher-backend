@@ -46,6 +46,14 @@ const orderSchema = new mongoose.Schema<IOrders>(
         },
       },
     ],
+    userID: {
+      type: String,
+      required: true,
+    },
+    deletedByAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

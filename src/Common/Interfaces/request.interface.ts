@@ -7,5 +7,6 @@ export interface IAuthRequest extends Request {
     decodedData?: JwtPayload;
     cartDoc?: ICart | null;
     token?: string;
+    userID?: string;
   };
 }
