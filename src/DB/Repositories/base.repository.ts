@@ -1,4 +1,5 @@
 import {
+  DeleteResult,
   FilterQuery,
   Model,
   ProjectionType,
@@ -48,7 +49,9 @@ export abstract class BaseRepository<T> {
     return await this.model.updateOne(filter, document);
   }
 
-  async deleteOneDocument(filter: FilterQuery<T>): Promise<Object> {
+  async deleteOneDocument(
+    filter: FilterQuery<T>
+  ): Promise<Object | DeleteResult> {
     return await this.model.deleteOne(filter);
   }
 

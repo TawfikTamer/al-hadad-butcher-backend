@@ -6,6 +6,7 @@ import { FailedResponse, HttpException } from "./Utils";
 import { adminRouter, productRouter, cartRoute } from "./Modules";
 
 import cookieParser from "cookie-parser";
+import orderRouter from "./Modules/Orders/orders.controller";
 
 const app = express();
 
@@ -29,9 +30,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/photos", express.static("Uploads/product Images"));
+
 app.use("/api/admin", adminRouter);
 app.use("/api/products", productRouter);
 app.use("/api/cart", cartRoute);
+app.use("/api/orders", orderRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ msg: "Route not found" });

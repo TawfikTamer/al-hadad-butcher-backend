@@ -27,6 +27,25 @@ const orderSchema = new mongoose.Schema<IOrders>(
       type: String,
       default: "None",
     },
+    orderItem: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Products",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 0.25,
+          default: 1,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
