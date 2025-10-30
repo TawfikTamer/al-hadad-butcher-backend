@@ -3,7 +3,7 @@ import { ProductRepository } from "../../DB/Repositories/products.repository";
 import { SuccessResponse } from "../../Utils";
 
 class ProductsService {
-  productsRep = new ProductRepository();
+  productsRep: ProductRepository = new ProductRepository();
 
   allProduct = async (req: Request, res: Response) => {
     const allProducts = await this.productsRep.findDocuments(

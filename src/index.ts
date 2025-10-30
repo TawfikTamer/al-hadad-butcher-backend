@@ -62,3 +62,19 @@ app.use(
 app.listen(process.env.PORT, () => {
   console.log(`server running at ${process.env.PORT}`);
 });
+
+// const arrofobj = [
+//   {
+//     arr: [],
+//   },
+//   {
+//     arr: [1, 2, 3],
+//   },
+//   { arr: [1, 2, 3] },
+// ];
+
+// console.log(
+//   arrofobj.filter((obj) => {
+//     return obj.arr.length;
+//   })
+// );
