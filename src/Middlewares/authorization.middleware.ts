@@ -12,7 +12,6 @@ export const authorizationMiddleware = async (
   next: NextFunction
 ) => {
   let guestUserToken = req.cookies?.guestUser;
-
   // const cartRepo = new CartRepository();
   let cartDoc;
 
