@@ -57,6 +57,7 @@ class OrderService {
       orderItem,
       additionalInfo,
       userID,
+      totalPrice,
     });
 
     // send email to the admin
@@ -102,7 +103,7 @@ class OrderService {
       {
         populate: {
           path: "orderItem.productId",
-          select: "-createdAt -updatedAt -__v -price -isAvailable",
+          select: "-createdAt -__v -price -isAvailable",
         },
       }
     );

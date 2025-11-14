@@ -54,6 +54,10 @@ const orderSchema = new mongoose.Schema<IOrders>(
       type: Boolean,
       default: false,
     },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );
