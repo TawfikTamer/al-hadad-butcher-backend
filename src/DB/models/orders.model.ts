@@ -58,6 +58,14 @@ const orderSchema = new mongoose.Schema<IOrders>(
       type: Number,
       required: true,
     },
+    orderPrice: {
+      type: Number,
+      required: true,
+    },
+    delivieryPrice: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );

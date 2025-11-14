@@ -23,7 +23,9 @@ class OrderService {
       zone,
       address,
       orderItem,
-      additionalInfo = "None",
+      additionalInfo,
+      orderPrice,
+      delivieryPrice,
       totalPrice,
     } = req.body as IOrders;
     // get user Id
@@ -57,6 +59,8 @@ class OrderService {
       orderItem,
       additionalInfo,
       userID,
+      orderPrice,
+      delivieryPrice,
       totalPrice,
     });
 
@@ -86,8 +90,10 @@ class OrderService {
         zone,
         address,
         orderItemsHtml,
-        additionalInfo,
+        additionalInfo: additionalInfo || `لا يوجد`,
         orderDate: new Date().toLocaleString(),
+        orderPrice,
+        delivieryPrice,
         totalPrice,
       }),
     });
@@ -142,6 +148,12 @@ class OrderService {
 
     userOrders = userOrders.filter((order) => {
       order.orderItem = order.orderItem.filter((item) => {
+        if (!item.productId) {
+          order.totalPrice =
+            Number(order.totalPrice || 0) -
+            Number(item.quantity) * Number(item.price);
+        }
+
         return item.productId != null;
       });
       order.save();

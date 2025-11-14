@@ -18,4 +18,6 @@ export interface IOrders extends Document {
   userID: string;
   deletedByAdmin: boolean;
   totalPrice: Number;
+  orderPrice: Number;
+  delivieryPrice: Number;
 }

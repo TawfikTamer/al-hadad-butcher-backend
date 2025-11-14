@@ -7,6 +7,8 @@ export const newOrderContent = (order: any) => {
     zone,
     additionalInfo,
     orderDate,
+    orderPrice = 0,
+    delivieryPrice = 0,
     totalPrice = 0,
     orderItemsHtml,
   } = order;
@@ -112,8 +114,14 @@ export const newOrderContent = (order: any) => {
         <div style="margin-bottom: 10px; text-align: right;">
           <span style="font-weight: bold">تاريخ الطلب:</span> ${orderDate}
         </div>
-        <div style="font-weight: bold; color: #c40000; text-align: right;">
-          <span style="color: #000">المجموع:</span> ${totalPrice} ج.م
+        <div style="margin-bottom: 10px; text-align: right;">
+          <span style="font-weight: bold">مجموع الطلب:</span> ${orderPrice} ج.م
+        </div>
+        <div style="margin-bottom: 10px; text-align: right;">
+          <span style="font-weight: bold">التوصيل:</span> ${delivieryPrice} ج.م
+        </div>
+        <div style="font-weight: bold; color: #c40000; text-align: right; font-size: 20px; padding-top: 10px; border-top: 1px solid #eee;">
+          <span style="color: #000">المجموع الكلي:</span> ${totalPrice} ج.م
         </div>
       </div>
     </div>
