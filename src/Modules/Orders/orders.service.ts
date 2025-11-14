@@ -131,7 +131,6 @@ class OrderService {
         },
       }
     );
-    console.log(userOrder);
 
     res.status(200).json(SuccessResponse("here is your order", 200, userOrder));
   };

@@ -90,14 +90,20 @@ class AdminService {
   };
 
   updateProduct = async (req: Request, res: Response) => {
-    const { name, price, description, category }: Partial<IProduct> = req.body;
+    const {
+      name,
+      price,
+      description,
+      category,
+      isAvailable,
+    }: Partial<IProduct> = req.body;
     const { productID } = req.params;
     const imagefile = req.file;
 
     // check if the product is not exist
     const product = await this.productsRep.findOneDocument(
       { _id: productID },
-      "-__v -createdAt -updatedAt -isAvailable "
+      "-__v -createdAt -updatedAt "
     );
     if (!product) throw new BadRequestException("this product is not exist");
 
@@ -105,6 +111,7 @@ class AdminService {
     if (price) product.price = price;
     if (description) product.description = description;
     if (category) product.category = category;
+    if (isAvailable) product.isAvailable = isAvailable;
     if (imagefile) {
       product.image = imagefile.filename;
       product.imagePath = imagefile.path;
