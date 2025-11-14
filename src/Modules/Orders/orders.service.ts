@@ -1,7 +1,13 @@
 import { Request, Response } from "express";
 import { OrderRepository } from "../../DB/Repositories/order.repository";
 import { IAuthRequest, IOrders } from "../../Common";
-import { BadRequestException, SuccessResponse } from "../../Utils";
+import {
+  BadRequestException,
+  emitter,
+  newOrderContent,
+  orderItemsContet,
+  SuccessResponse,
+} from "../../Utils";
 import { ProductRepository } from "../../DB/Repositories";
 
 class OrderService {
@@ -17,7 +23,8 @@ class OrderService {
       zone,
       address,
       orderItem,
-      additionalInfo,
+      additionalInfo = "None",
+      totalPrice,
     } = req.body as IOrders;
     // get user Id
     const { userID } = (req as IAuthRequest).loggedInUser;
@@ -50,6 +57,38 @@ class OrderService {
       orderItem,
       additionalInfo,
       userID,
+    });
+
+    // send email to the admin
+
+    // make the items ready to mail
+    let orderItemsHtml = ``;
+    for (let i = 0; i < orderItem.length; i++) {
+      orderItemsHtml =
+        orderItemsHtml +
+        orderItemsContet(
+          products[i].name,
+          orderItem[i].quantity,
+          products[i].price,
+          orderItem[i].quantity * products[i].price
+        );
+    }
+
+    // send the mail
+    emitter.emit("sendEmail", {
+      to: process.env.ORDER_RECEIVER_EMAIL,
+      subject: "new order",
+      content: newOrderContent({
+        fullName,
+        email,
+        phoneNumber,
+        zone,
+        address,
+        orderItemsHtml,
+        additionalInfo,
+        orderDate: new Date().toLocaleString(),
+        totalPrice,
+      }),
     });
 
     res.status(201).json(SuccessResponse("order added", 201));

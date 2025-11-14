@@ -17,4 +17,5 @@ export interface IOrders extends Document {
   orderItem: IOrderItem[];
   userID: string;
   deletedByAdmin: boolean;
+  totalPrice: Number;
 }
