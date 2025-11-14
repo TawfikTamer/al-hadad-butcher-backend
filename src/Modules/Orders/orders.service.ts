@@ -130,6 +130,7 @@ class OrderService {
       {
         orderItem: 1,
         createdAt: 1,
+        totalPrice: 1,
       },
       {
         populate: {
