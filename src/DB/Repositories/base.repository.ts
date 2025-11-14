@@ -64,4 +64,8 @@ export abstract class BaseRepository<T> {
   ) {
     return await this.model.findOneAndUpdate(filter, document, options);
   }
+
+  async deleteManyDocuments(filter: FilterQuery<T>): Promise<Object> {
+    return await this.model.deleteMany(filter);
+  }
 }

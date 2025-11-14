@@ -2,7 +2,7 @@ import "dotenv/config";
 import express, { Response, Request, NextFunction } from "express";
 import cors from "cors";
 import { dbConnection } from "./DB/db.connection";
-import { FailedResponse, HttpException } from "./Utils";
+import { deleteOrdersCronJob, FailedResponse, HttpException } from "./Utils";
 import { adminRouter, productRouter, cartRoute } from "./Modules";
 
 import cookieParser from "cookie-parser";
@@ -24,6 +24,9 @@ dbConnection();
 //   },
 //   credentials: true,
 // };
+
+// start cron jobs
+deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
 
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
@@ -62,19 +65,3 @@ app.use(
 app.listen(process.env.PORT, () => {
   console.log(`server running at ${process.env.PORT}`);
 });
-
-// const arrofobj = [
-//   {
-//     arr: [],
-//   },
-//   {
-//     arr: [1, 2, 3],
-//   },
-//   { arr: [1, 2, 3] },
-// ];
-
-// console.log(
-//   arrofobj.filter((obj) => {
-//     return obj.arr.length;
-//   })
-// );
