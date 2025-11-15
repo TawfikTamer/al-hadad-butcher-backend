@@ -21,8 +21,6 @@ export const validationMiddleware = (Schema: SchemaType) => {
         const resault = Schema[key].safeParse(req[key]);
         if (!resault?.success) {
           const issues = resault.error.issues.map((issue) => {
-            console.log(issue);
-
             return {
               path: issue.path[0],
               message: issue.message,
