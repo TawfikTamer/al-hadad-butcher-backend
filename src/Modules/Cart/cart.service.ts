@@ -16,8 +16,7 @@ class CartService {
     quantity = quantity < 0.25 ? 0.25 : quantity;
 
     const isAvailable = await this.productRepo.findDocumentById(productId);
-    if (!isAvailable)
-      throw new BadRequestException("this product is not valid");
+    if (!isAvailable) throw new BadRequestException("هذا المنتج غير صالح");
 
     let productIsExist = false;
     if (cartDoc?.items) {
@@ -45,7 +44,7 @@ class CartService {
         secure: false, // true in production
         maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       })
-      .json(SuccessResponse("added to cart", 200, { cartDoc }));
+      .json(SuccessResponse("تمت إضافة المنتج إلى السلة", 200, { cartDoc }));
   };
 
   listCart = async (req: Request, res: Response) => {
@@ -59,7 +58,7 @@ class CartService {
         secure: false, // true in production
         maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       })
-      .json(SuccessResponse("here is your cart", 200, cartDoc));
+      .json(SuccessResponse("هنا سلتك", 200, cartDoc));
   };
 
   deleteFromCart = async (req: Request, res: Response) => {
@@ -81,7 +80,7 @@ class CartService {
         secure: false, // true in production
         maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       })
-      .json(SuccessResponse("item has been deleted from cart", 200, cartDoc));
+      .json(SuccessResponse("تم حذف المنتج من السلة", 200, cartDoc));
   };
 
   updateOnCart = async (req: Request, res: Response) => {
@@ -91,8 +90,7 @@ class CartService {
     productId = new mongoose.Types.ObjectId(productId);
     quantity = quantity < 0.25 ? 0.25 : quantity;
     const isAvailable = await this.productRepo.findDocumentById(productId);
-    if (!isAvailable)
-      throw new BadRequestException("this product is not valid");
+    if (!isAvailable) throw new BadRequestException("هذا المنتج غير صالح");
 
     if (cartDoc?.items)
       for (const item of cartDoc.items) {
@@ -113,7 +111,7 @@ class CartService {
         secure: false, // true in production
         maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       })
-      .json(SuccessResponse("added to cart", 200, { cartDoc }));
+      .json(SuccessResponse("تمت إضافة المنتج إلى السلة", 200, { cartDoc }));
   };
 
   confirmOrder = (req: Request, res: Response) => {};

@@ -32,10 +32,10 @@ class OrderService {
     const { userID } = (req as IAuthRequest).loggedInUser;
 
     if (!fullName || !email || !phoneNumber || !zone || !address || !orderItem)
-      throw new BadRequestException("All required fields must be provided");
+      throw new BadRequestException("يجب توفير جميع الحقول المطلوبة");
 
     if (!orderItem.length)
-      throw new BadRequestException("this request doesn't have any orders");
+      throw new BadRequestException("هذا الطلب لا يحتوي على أي طلبيات");
 
     const productsId = orderItem.map((product) => {
       return product.productId;
@@ -47,7 +47,7 @@ class OrderService {
     });
 
     if (products.length !== orderItem.length)
-      throw new BadRequestException("products is not available");
+      throw new BadRequestException("المنتجات غير متاحة");
 
     // create the order
     this.orderRep.createNewDocument({
@@ -98,7 +98,7 @@ class OrderService {
       }),
     });
 
-    res.status(201).json(SuccessResponse("order added", 201));
+    res.status(201).json(SuccessResponse("تمت إضافة الطلب", 201));
   };
   getAllOrders = async (req: Request, res: Response) => {
     const orders = await this.orderRep.findDocuments(
@@ -120,12 +120,12 @@ class OrderService {
     const { orderId } = req.params;
     const order = await this.orderRep.findOneDocument({ _id: orderId });
     if (!order)
-      throw new BadRequestException("there is no such order to delete");
+      throw new BadRequestException("لا توجد طلبية بهذا الرقم لحذفها");
 
     order.deletedByAdmin = true;
     await order.save();
 
-    res.status(200).json(SuccessResponse("order has been deleted"));
+    res.status(200).json(SuccessResponse("تم حذف الطلب بنجاح"));
   };
   getUserOrders = async (req: Request, res: Response) => {
     // get user Id
@@ -160,16 +160,14 @@ class OrderService {
       return order.orderItem.length;
     });
 
-    res
-      .status(200)
-      .json(SuccessResponse("here is your orders", 200, userOrders));
+    res.status(200).json(SuccessResponse("هنا طلباتك", 200, userOrders));
   };
   getSpecificOrder = async (req: Request, res: Response) => {
     // get user and order IDs
     const { userID } = (req as IAuthRequest).loggedInUser;
     const { orderId } = req.params;
 
-    if (!orderId) throw new BadRequestException("please insert order Id");
+    if (!orderId) throw new BadRequestException("يرجى إدراج رقم الطلبية");
 
     const userOrder = await this.orderRep.findOneDocument(
       {
@@ -185,7 +183,7 @@ class OrderService {
       }
     );
 
-    res.status(200).json(SuccessResponse("here is your order", 200, userOrder));
+    res.status(200).json(SuccessResponse("هنا طلبتك", 200, userOrder));
   };
 }
 

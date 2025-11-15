@@ -1,5 +1,5 @@
 export function SuccessResponse<T>(
-  message = "Your Request is processed successfully",
+  message = "تم معالجة الطلب بنجاح",
   statusCode = 200,
   data?: T
 ) {
@@ -16,18 +16,12 @@ export function SuccessResponse<T>(
 }
 
 export function FailedResponse<T>(
-  message = "Your Request is Failed",
+  message = "فشل الطلب",
   statusCode = 500,
   error?: T
 ) {
   return {
-    meta: {
-      statusCode,
-      success: false,
-    },
-    error: {
-      message,
-      error,
-    },
+    message,
+    error,
   };
 }

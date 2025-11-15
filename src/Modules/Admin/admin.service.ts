@@ -20,7 +20,9 @@ class AdminService {
       email !== process.env.ADMIN_EMAIL ||
       password != process.env.ADMIN_PASSWORD
     )
-      throw new BadRequestException("invalid email/password");
+      throw new BadRequestException(
+        "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      );
 
     // generate token
     const accesstoken = generateToken(
@@ -41,7 +43,7 @@ class AdminService {
         secure: false, // true in production
         maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       })
-      .json(SuccessResponse("logged in succeccfully", 200, { accesstoken }));
+      .json(SuccessResponse("تم تسجيل الدخول بنجاح", 200, { accesstoken }));
   };
 
   logOut = async (req: Request, res: Response) => {
@@ -51,22 +53,21 @@ class AdminService {
       secure: false, // true in production
     });
 
-    res.status(200).json(SuccessResponse("Logged out successfully", 200));
+    res.status(200).json(SuccessResponse("تم تسجيل الخروج بنجاح", 200));
   };
 
   addProduct = async (req: Request, res: Response) => {
     const { name, price, description, category }: Partial<IProduct> = req.body;
     const imagefile = req.file;
 
-    if (!name) throw new BadRequestException("name field required");
-    if (!description)
-      throw new BadRequestException("description field required");
-    if (!price) throw new BadRequestException("price field required");
-    if (!category) throw new BadRequestException("category field required");
+    if (!name) throw new BadRequestException("حقل الاسم مطلوب");
+    if (!description) throw new BadRequestException("حقل الوصف مطلوب");
+    if (!price) throw new BadRequestException("حقل السعر مطلوب");
+    if (!category) throw new BadRequestException("حقل الفئة مطلوب");
 
     // check if the product is already exist
     const isExist = await this.productsRep.findOneDocument({ name });
-    if (isExist) throw new BadRequestException("this product already exist");
+    if (isExist) throw new BadRequestException("هذا المنتج موجود بالفعل");
 
     // add the product to the DB
     this.productsRep.createNewDocument({
@@ -79,7 +80,7 @@ class AdminService {
     });
 
     res.status(200).json(
-      SuccessResponse<Partial<IProduct>>("test", 200, {
+      SuccessResponse<Partial<IProduct>>("تمت إضافة المنتج", 200, {
         name,
         description,
         price,
@@ -105,7 +106,7 @@ class AdminService {
       { _id: productID },
       "-__v -createdAt -updatedAt "
     );
-    if (!product) throw new BadRequestException("this product is not exist");
+    if (!product) throw new BadRequestException("هذا المنتج غير موجود");
 
     if (name) product.name = name;
     if (price) product.price = price;
@@ -122,14 +123,14 @@ class AdminService {
 
     return res
       .status(200)
-      .json(SuccessResponse("product has updated", 200, productResponse));
+      .json(SuccessResponse("تم تحديث المنتج", 200, productResponse));
   };
 
   deleteProduct = async (req: Request, res: Response) => {
     const { productID } = req.params;
 
     const product = await this.productsRep.findOneDocument({ _id: productID });
-    if (!product) throw new BadRequestException("this product is not exist");
+    if (!product) throw new BadRequestException("هذا المنتج غير موجود");
 
     // delete the image of the product
     if (product.imagePath && product.imagePath != "NO path") {
@@ -139,16 +140,14 @@ class AdminService {
     // delete the product
     await product.deleteOne();
 
-    return res
-      .status(200)
-      .json(SuccessResponse("product has been deleted", 200));
+    return res.status(200).json(SuccessResponse("تم حذف المنتج بنجاح", 200));
   };
 
   userAuth = async (req: Request, res: Response) => {
     const user = (req as IAuthRequest).loggedInUser;
     return res
       .status(200)
-      .json(SuccessResponse("logged in user", 200, { user }));
+      .json(SuccessResponse("المستخدم المسجل", 200, { user }));
   };
 }
 

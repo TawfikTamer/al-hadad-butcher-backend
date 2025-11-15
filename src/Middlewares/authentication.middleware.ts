@@ -9,13 +9,13 @@ export const authenticationMiddleware = async (
 ) => {
   const accesstoken = req.cookies?.accesstoken || undefined;
 
-  if (!accesstoken) throw new BadRequestException("please insert token");
+  if (!accesstoken) throw new BadRequestException("يرجى إدراج التوكن");
 
   const decodedData = verifyToken(
     accesstoken,
     process.env.JWT_ACCESS_KEY as string
   );
-  if (!decodedData.jti) throw new BadRequestException("invalid token");
+  if (!decodedData.jti) throw new BadRequestException("التوكن غير صحيح");
 
   (req as IAuthRequest).loggedInUser = { decodedData };
 

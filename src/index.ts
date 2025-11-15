@@ -54,6 +54,7 @@ app.use(
       return res
         .status(err.statusCode)
         .json(FailedResponse(err.message, err.statusCode, err.error));
+      // .json({ message: err.message, error: err.error })
     }
     console.log(err);
     res
