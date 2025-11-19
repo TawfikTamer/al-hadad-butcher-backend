@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { PaginateModel } from "mongoose";
 import { IOrders, orderStateEnum } from "../../Common";
+import mongoosePagination from "mongoose-paginate-v2";
 
 const orderSchema = new mongoose.Schema<IOrders>(
   {
@@ -75,4 +76,8 @@ const orderSchema = new mongoose.Schema<IOrders>(
   { timestamps: true }
 );
 
-export const ordersModel = mongoose.model<IOrders>("Orders", orderSchema);
+orderSchema.plugin(mongoosePagination);
+export const ordersModel = mongoose.model<IOrders, PaginateModel<IOrders>>(
+  "Orders",
+  orderSchema
+);

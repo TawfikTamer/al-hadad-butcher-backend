@@ -9,6 +9,7 @@ import {
   SuccessResponse,
 } from "../../Utils";
 import { ProductRepository } from "../../DB/Repositories";
+import { pagination } from "../../Utils/Pagination/pagination.utils";
 
 class OrderService {
   orderRep: OrderRepository = new OrderRepository();
@@ -102,12 +103,20 @@ class OrderService {
     res.status(201).json(SuccessResponse("تمت إضافة الطلب", 201));
   };
   getAllOrders = async (req: Request, res: Response) => {
-    const orders = await this.orderRep.findDocuments(
+    const { page = 1, limit = 10 } = req.query;
+
+    const { limit: currentLimit } = pagination({
+      page: Number(page),
+      limit: Number(limit),
+    });
+
+    const orders = await this.orderRep.orderPagination(
       {
         deletedByAdmin: false,
       },
-      {},
       {
+        limit: currentLimit,
+        page: Number(page),
         populate: {
           path: "orderItem.productId",
           select: "-createdAt -__v -price -isAvailable",
@@ -115,7 +124,7 @@ class OrderService {
       }
     );
 
-    res.status(200).json({ orders });
+    res.status(200).json({ orders: orders.docs });
   };
   deleteOrder = async (req: Request, res: Response) => {
     const { orderId } = req.params;
@@ -141,7 +150,6 @@ class OrderService {
 
     res.status(200).json(SuccessResponse("تم تغير حالة الاوردر بنجاح"));
   };
-
   getUserOrders = async (req: Request, res: Response) => {
     // get user Id
     const { userID } = (req as IAuthRequest).loggedInUser;
