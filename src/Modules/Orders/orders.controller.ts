@@ -4,7 +4,7 @@ import {
   authorizationMiddleware,
   validationMiddleware,
 } from "../../Middlewares";
-import { createOrderValidator } from "../../Utils";
+import { changeOrderStateValidator, createOrderValidator } from "../../Utils";
 
 const orderRouter = Router();
 orderRouter.post(
@@ -12,6 +12,12 @@ orderRouter.post(
   authorizationMiddleware,
   validationMiddleware(createOrderValidator),
   ordersService.createOrder
+);
+orderRouter.patch(
+  "/change-order-state/:orderId",
+  authorizationMiddleware,
+  validationMiddleware(changeOrderStateValidator),
+  ordersService.changeOrderState
 );
 orderRouter.get("/get-all-orders", ordersService.getAllOrders);
 orderRouter.get(

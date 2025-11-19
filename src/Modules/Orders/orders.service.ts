@@ -128,6 +128,20 @@ class OrderService {
 
     res.status(200).json(SuccessResponse("تم حذف الطلب بنجاح"));
   };
+  changeOrderState = async (req: Request, res: Response) => {
+    const { orderId } = req.params;
+    const { state } = req.body;
+
+    const order = await this.orderRep.findOneDocument({ _id: orderId });
+    if (!order)
+      throw new BadRequestException("لا توجد طلبية بهذا الرقم لتعديلها");
+
+    order.orderState = state;
+    await order.save();
+
+    res.status(200).json(SuccessResponse("تم تغير حالة الاوردر بنجاح"));
+  };
+
   getUserOrders = async (req: Request, res: Response) => {
     // get user Id
     const { userID } = (req as IAuthRequest).loggedInUser;
@@ -138,6 +152,7 @@ class OrderService {
         orderItem: 1,
         createdAt: 1,
         totalPrice: 1,
+        orderState: 1,
       },
       {
         populate: {

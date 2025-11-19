@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IOrders } from "../../Common";
+import { IOrders, orderStateEnum } from "../../Common";
 
 const orderSchema = new mongoose.Schema<IOrders>(
   {
@@ -65,6 +65,11 @@ const orderSchema = new mongoose.Schema<IOrders>(
     delivieryPrice: {
       type: Number,
       required: true,
+    },
+    orderState: {
+      type: String,
+      enum: orderStateEnum,
+      default: orderStateEnum.NEW,
     },
   },
   { timestamps: true }

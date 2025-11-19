@@ -1,4 +1,5 @@
 import z from "zod";
+import { orderStateEnum } from "../../Common";
 
 const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId");
 
@@ -23,5 +24,10 @@ export const createOrderValidator = {
     orderPrice: z.number().min(0),
     delivieryPrice: z.number().min(0),
     totalPrice: z.number().min(0),
+  }),
+};
+export const changeOrderStateValidator = {
+  body: z.strictObject({
+    state: z.enum(orderStateEnum, "حالة الاوردر غير صحيحة"),
   }),
 };

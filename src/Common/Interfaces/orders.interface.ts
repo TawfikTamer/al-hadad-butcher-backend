@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+import { orderStateEnum } from "../Enums/order.enum";
 
 export interface IOrderItem {
   productId: mongoose.Types.ObjectId;
@@ -17,6 +18,7 @@ export interface IOrders extends Document {
   orderItem: IOrderItem[];
   userID: string;
   deletedByAdmin: boolean;
+  orderState: orderStateEnum;
   totalPrice: Number;
   orderPrice: Number;
   delivieryPrice: Number;
