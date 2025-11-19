@@ -36,9 +36,15 @@ adminRouter.patch(
 );
 
 adminRouter.delete(
-  "/delete-product/:productID",
+  "/soft-delete-product/:productID",
   authenticationMiddleware,
-  AdminService.deleteProduct
+  AdminService.softDeleteProduct
+);
+
+adminRouter.delete(
+  "/hard-delete-product/:productID",
+  authenticationMiddleware,
+  AdminService.hardDeleteProduct
 );
 
 export { adminRouter };
