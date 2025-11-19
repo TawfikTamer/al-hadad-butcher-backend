@@ -44,6 +44,7 @@ class OrderService {
     const products = await this.productsRep.findDocuments({
       _id: productsId,
       isAvailable: true,
+      isDeleted: false,
     });
 
     if (products.length !== orderItem.length)

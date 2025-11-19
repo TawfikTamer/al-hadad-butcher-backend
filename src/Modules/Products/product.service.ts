@@ -7,7 +7,7 @@ class ProductsService {
 
   allProduct = async (req: Request, res: Response) => {
     const allProducts = await this.productsRep.findDocuments(
-      {},
+      { isDeleted: false },
       "-createdAt -updatedAt -__v "
     );
 

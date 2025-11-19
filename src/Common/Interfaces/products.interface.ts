@@ -10,4 +10,5 @@ export interface IProduct extends Document {
   imagePath: string | undefined;
   weight?: string;
   isAvailable: boolean;
+  isDeleted: boolean;
 }

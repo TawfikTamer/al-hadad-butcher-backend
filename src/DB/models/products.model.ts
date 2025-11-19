@@ -23,6 +23,10 @@ const productSchema = new mongoose.Schema<IProduct>(
       type: Boolean,
       default: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     weight: String,
   },
   { timestamps: true }

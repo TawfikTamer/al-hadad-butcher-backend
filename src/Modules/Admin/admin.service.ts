@@ -126,7 +126,20 @@ class AdminService {
       .json(SuccessResponse("تم تحديث المنتج", 200, productResponse));
   };
 
-  deleteProduct = async (req: Request, res: Response) => {
+  softDeleteProduct = async (req: Request, res: Response) => {
+    const { productID } = req.params;
+
+    const product = await this.productsRep.findOneDocument({ _id: productID });
+    if (!product) throw new BadRequestException("هذا المنتج غير موجود");
+
+    // soft delete the product
+    product.isDeleted = true;
+    await product.save();
+
+    return res.status(200).json(SuccessResponse("تم حذف المنتج بنجاح", 200));
+  };
+
+  hardDeleteProduct = async (req: Request, res: Response) => {
     const { productID } = req.params;
 
     const product = await this.productsRep.findOneDocument({ _id: productID });
@@ -137,7 +150,7 @@ class AdminService {
       fs.unlinkSync(product.imagePath as string);
     }
 
-    // delete the product
+    // hard delete the product
     await product.deleteOne();
 
     return res.status(200).json(SuccessResponse("تم حذف المنتج بنجاح", 200));
