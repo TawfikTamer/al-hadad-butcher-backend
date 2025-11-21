@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import TelegramBot, { ChatId } from "node-telegram-bot-api";
 import { OrderRepository } from "../../DB/Repositories/order.repository";
 import { IAuthRequest, IOrders } from "../../Common";
 import {
@@ -66,39 +67,92 @@ class OrderService {
       totalPrice,
     });
 
-    // send email to the admin
-
-    // make the items ready to mail
+    // send notifications to the admin
     let orderItemsHtml = ``;
-    for (let i = 0; i < orderItem.length; i++) {
-      orderItemsHtml =
-        orderItemsHtml +
-        orderItemsContet(
-          products[i].name,
-          orderItem[i].quantity,
-          products[i].price,
-          orderItem[i].quantity * products[i].price
-        );
+    let orderItemsTelegram = [];
+    if (
+      process.env.TELEGRAM_BOT_ACTIVATE == "ON" ||
+      process.env.NODEMAILER_ACTIVAE == "ON"
+    ) {
+      for (let i = 0; i < orderItem.length; i++) {
+        orderItemsTelegram.push({
+          name: products[i].name,
+          quantity: orderItem[i].quantity,
+          unit: "كجم",
+          price: products[i].price,
+          total: orderItem[i].quantity * products[i].price,
+        });
+        orderItemsHtml =
+          orderItemsHtml +
+          orderItemsContet(
+            products[i].name,
+            orderItem[i].quantity,
+            products[i].price,
+            orderItem[i].quantity * products[i].price
+          );
+      }
     }
 
-    // send the mail
-    emitter.emit("sendEmail", {
-      to: process.env.ORDER_RECEIVER_EMAIL,
-      subject: "new order",
-      content: newOrderContent({
-        fullName,
-        email,
-        phoneNumber,
-        zone,
-        address,
-        orderItemsHtml,
-        additionalInfo: additionalInfo || `لا يوجد`,
-        orderDate: new Date().toLocaleString(),
-        orderPrice,
-        delivieryPrice,
-        totalPrice,
-      }),
-    });
+    // send mail
+    if (process.env.NODEMAILER_ACTIVAE == "ON") {
+      emitter.emit("sendEmail", {
+        to: process.env.ORDER_RECEIVER_EMAIL,
+        subject: "new order",
+        content: newOrderContent({
+          fullName,
+          email,
+          phoneNumber,
+          zone,
+          address,
+          orderItemsHtml,
+          additionalInfo: additionalInfo || `لا يوجد`,
+          orderDate: new Date().toLocaleString(),
+          orderPrice,
+          delivieryPrice,
+          totalPrice,
+        }),
+      });
+    }
+
+    // send telegram message
+    if (process.env.TELEGRAM_BOT_ACTIVATE == "ON") {
+      const telegramMessage = `
+🛒 *طلب جديد*
+━━━━━━━━━━━━━━━
+
+👤 *بيانات العميل:*
+• الاسم: ${fullName}
+• الهاتف: ${phoneNumber}
+• الإيميل: ${email}
+• المنطقة: ${zone}
+• العنوان: ${address}
+
+📦 *تفاصيل الطلب:*
+${orderItemsTelegram
+  .map(
+    (item) =>
+      `• ${item.name} --> ${item.quantity} ${item.unit} × ${item.price} ج.م = ${item.total} ج.م`
+  )
+  .join("\n")}
+
+💬 *ملاحظات إضافية:*
+${additionalInfo || "لا يوجد"}
+
+💰 *الحساب:*
+• سعر الطلب: ${orderPrice} ج.م
+
+🕐 ${new Date().toLocaleString("ar-EG")}
+━━━━━━━━━━━━━━━
+`;
+      const token = process.env.TELEGRAM_BOT_TOKEN || "";
+      // Create a bot that uses 'polling' to fetch new updates
+      const bot = new TelegramBot(token);
+      bot.sendMessage(
+        process.env.TELEGRAM_BOT_CHATID as ChatId,
+        telegramMessage,
+        { parse_mode: "Markdown" }
+      );
+    }
 
     res.status(201).json(SuccessResponse("تمت إضافة الطلب", 201));
   };
