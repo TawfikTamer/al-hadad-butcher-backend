@@ -40,6 +40,18 @@ app.use(cookieParser());
 // Serve static files (e.g., product images)
 app.use("/photos", express.static("Uploads/product Images"));
 
+import fs from "node:fs";
+// import path from "node:path"
+app.get("/files", (req, res) => {
+  try {
+    const dir = "./Uploads";
+    const files = fs.readdirSync(dir, { recursive: true });
+    res.json({ files });
+  } catch (err: any) {
+    res.json({ error: err.message });
+  }
+});
+
 app.use("/api/admin", adminRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
