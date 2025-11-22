@@ -1,4 +1,4 @@
-// import "./config";
+import "./config";
 import express, { Response, Request, NextFunction } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -12,28 +12,28 @@ const app = express();
 // Establish the database connection
 dbConnection();
 
-// // CORS Configuration
-// const whitelist = process.env.WHITELIST;
-// const corsOptions = {
-//   origin: function (origin: any, callback: any) {
-//     if (!origin) {
-//       callback(null, true);
-//       return;
-//     }
-//     if (whitelist?.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true,
-// };
+// CORS Configuration
+const whitelist = process.env.WHITELIST;
+const corsOptions = {
+  origin: function (origin: any, callback: any) {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+    if (whitelist?.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
 
 // --- Cron Jobs ---
 deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
 
 // --- Middlewares ---
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
