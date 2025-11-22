@@ -1,4 +1,4 @@
-import "./config";
+// import "./config";
 import express, { Response, Request, NextFunction } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
