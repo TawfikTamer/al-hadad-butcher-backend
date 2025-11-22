@@ -44,8 +44,8 @@ export const authorizationMiddleware = async (
   };
   res.cookie("guestUser", guestUserToken, {
     httpOnly: true, // Prevent client-side access
-    sameSite: "lax",
-    secure: false, // true in production
+    sameSite: "none",
+    secure: true,
     maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
   });
 
