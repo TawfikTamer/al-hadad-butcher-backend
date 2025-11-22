@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import TelegramBot, { ChatId } from "node-telegram-bot-api";
 import { OrderRepository } from "../../DB/Repositories/order.repository";
-import { IAuthRequest, IOrders } from "../../Common";
+import { IAuthRequest, IOrders, orderStateEnum } from "../../Common";
 import {
   BadRequestException,
   emitter,
@@ -157,16 +157,19 @@ ${additionalInfo || "لا يوجد"}
     res.status(201).json(SuccessResponse("تمت إضافة الطلب", 201));
   };
   getAllOrders = async (req: Request, res: Response) => {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, filter } = req.query;
 
     const { limit: currentLimit } = pagination({
       page: Number(page),
       limit: Number(limit),
     });
 
+    let pageFilter = filter == "all" ? Object.values(orderStateEnum) : [filter];
+
     const orders = await this.orderRep.orderPagination(
       {
         deletedByAdmin: false,
+        orderState: { $in: pageFilter },
       },
       {
         limit: currentLimit,
