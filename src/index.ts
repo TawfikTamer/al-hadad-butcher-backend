@@ -40,6 +40,10 @@ app.use(cookieParser());
 // Serve static files (e.g., product images)
 app.use("/photos", express.static("Uploads/product Images"));
 
+app.use((_req, res) => {
+  res.status(404).json({ msg: "Route not found" });
+});
+
 app.use("/api/admin", adminRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
