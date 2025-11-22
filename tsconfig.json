@@ -14,6 +14,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noImplicitReturns": false,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "skipLibCheck": true
   }
 }
