@@ -20,3 +20,5 @@ export const deleteOrdersCronJob = async (
     });
   });
 };
+
+// delete photo with no products

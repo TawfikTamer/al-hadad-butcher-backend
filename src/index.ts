@@ -1,5 +1,6 @@
 import "./config";
 import express, { Response, Request, NextFunction } from "express";
+import fs from "node:fs";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { dbConnection } from "./DB/db.connection";
@@ -39,9 +40,6 @@ app.use(cookieParser());
 
 // Serve static files (e.g., product images)
 app.use("/photos", express.static("Uploads/product Images"));
-
-import fs from "node:fs";
-// import path from "node:path"
 app.get("/files", (req, res) => {
   try {
     const dir = "./Uploads";

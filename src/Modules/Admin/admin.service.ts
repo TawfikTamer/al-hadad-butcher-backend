@@ -172,6 +172,11 @@ class AdminService {
     product.isDeleted = true;
     await product.save();
 
+    // delete the image of the product
+    if (product.imagePath && product.imagePath != "NO path") {
+      fs.unlinkSync(product.imagePath as string);
+    }
+
     return res.status(200).json(SuccessResponse("تم حذف المنتج بنجاح", 200));
   };
 
