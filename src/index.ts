@@ -12,28 +12,28 @@ const app = express();
 // Establish the database connection
 dbConnection();
 
-// CORS Configuration
-const whitelist = process.env.WHITELIST;
-const corsOptions = {
-  origin: function (origin: any, callback: any) {
-    if (!origin) {
-      callback(null, true);
-      return;
-    }
-    if (whitelist?.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-};
+// // CORS Configuration
+// const whitelist = process.env.WHITELIST;
+// const corsOptions = {
+//   origin: function (origin: any, callback: any) {
+//     if (!origin) {
+//       callback(null, true);
+//       return;
+//     }
+//     if (whitelist?.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true,
+// };
 
 // --- Cron Jobs ---
 deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
 
 // --- Middlewares ---
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -69,6 +69,6 @@ app.use(
 );
 
 // Server Initialization
-app.listen(Number(process.env.PORT), "0.0.0.0", () => {
+app.listen(process.env.PORT, () => {
   console.log(`server running at ${process.env.PORT}`);
 });
