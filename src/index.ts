@@ -69,6 +69,6 @@ app.use(
 );
 
 // Server Initialization
-app.listen(process.env.PORT, () => {
+app.listen(Number(process.env.PORT), "0.0.0.0", () => {
   console.log(`server running at ${process.env.PORT}`);
 });
