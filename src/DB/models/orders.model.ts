@@ -1,6 +1,6 @@
+import mongoosePagination from "mongoose-paginate-v2";
 import mongoose, { PaginateModel } from "mongoose";
 import { IOrders, orderStateEnum } from "../../Common";
-import mongoosePagination from "mongoose-paginate-v2";
 
 const orderSchema = new mongoose.Schema<IOrders>(
   {

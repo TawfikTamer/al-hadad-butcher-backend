@@ -7,3 +7,4 @@ export * from "./Services/email-contents.utils";
 export * from "./Services/send-email.utils";
 export * from "./Validators/order.validator";
 export * from "./Validators/admin.validator";
+export * from "./Pagination/pagination.utils";

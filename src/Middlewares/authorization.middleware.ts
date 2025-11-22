@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { generateToken, verifyToken } from "../Utils";
-// import { IAuthRequest } from "../Common";
 import { Secret, SignOptions } from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-// import { CartRepository } from "../DB/Repositories";
+import { generateToken, verifyToken } from "../Utils";
 import { IAuthRequest } from "../Common";
 
 export const authorizationMiddleware = async (
@@ -12,9 +10,7 @@ export const authorizationMiddleware = async (
   next: NextFunction
 ) => {
   let guestUserToken = req.cookies?.guestUser;
-  // const cartRepo = new CartRepository();
   let cartDoc;
-
   let userID;
 
   if (!guestUserToken) {
@@ -32,31 +28,13 @@ export const authorizationMiddleware = async (
         jwtid: tokenId,
       }
     );
-
-    // // create the user id
-    // cartDoc = await cartRepo.createNewDocument({
-    //   userID: `user_${tokenId}`,
-    // });
   } else {
     // decode the token
     const decodedData = verifyToken(
       guestUserToken,
       process.env.JWT_USER_GUEST_KEY as string
     );
-
     userID = decodedData.userID;
-    // cartDoc = await cartRepo.findOneDocument({ userID });
-    // if (cartDoc?.items) {
-    //   cartDoc.items = cartDoc.items.filter((item) => item.productId !== null);
-    //   await cartDoc.save();
-    // }
-
-    // if (!cartDoc) {
-    //   // create the user id
-    //   cartDoc = await cartRepo.createNewDocument({
-    //     userID: decodedData.userID,
-    //   });
-    // }
   }
 
   (req as IAuthRequest).loggedInUser = {

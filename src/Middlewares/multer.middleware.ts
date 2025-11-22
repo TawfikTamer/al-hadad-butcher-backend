@@ -1,7 +1,7 @@
-import multer, { FileFilterCallback } from "multer";
 import fs from "node:fs";
-import { fileExtensionsEnum, fileTypeEnum } from "../Common";
 import { Request } from "express";
+import multer, { FileFilterCallback } from "multer";
+import { fileExtensionsEnum, fileTypeEnum } from "../Common";
 
 const CreateFolde = (path: string) => {
   fs.mkdirSync(path, { recursive: true });

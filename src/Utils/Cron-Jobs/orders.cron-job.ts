@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { OrderRepository } from "../../DB/Repositories/order.repository";
+import { OrderRepository } from "../../DB/Repositories";
 
 const OrderRep = new OrderRepository();
 export const deleteOrdersCronJob = async (

@@ -1,21 +1,28 @@
 import { Request, Response } from "express";
 import TelegramBot, { ChatId } from "node-telegram-bot-api";
-import { OrderRepository } from "../../DB/Repositories/order.repository";
+
+import { OrderRepository, ProductRepository } from "../../DB/Repositories";
 import { IAuthRequest, IOrders, orderStateEnum } from "../../Common";
+
 import {
   BadRequestException,
   emitter,
   newOrderContent,
   orderItemsContet,
   SuccessResponse,
+  pagination,
 } from "../../Utils";
-import { ProductRepository } from "../../DB/Repositories";
-import { pagination } from "../../Utils/Pagination/pagination.utils";
 
+// Order service: handles order creation and management
 class OrderService {
   orderRep: OrderRepository = new OrderRepository();
   productsRep: ProductRepository = new ProductRepository();
 
+  /**
+   * Create a new order and notify admin if enabled.
+   * @param {Request} req - Express request
+   * @param {Response} res - Express response
+   */
   createOrder = async (req: Request, res: Response) => {
     // get data from body
     const {
@@ -67,7 +74,7 @@ class OrderService {
       totalPrice,
     });
 
-    // send notifications to the admin
+    // build order items content for notifications
     let orderItemsHtml = ``;
     let orderItemsTelegram = [];
     if (
@@ -93,7 +100,7 @@ class OrderService {
       }
     }
 
-    // send mail
+    // send mail if configured
     if (process.env.NODEMAILER_ACTIVAE == "ON") {
       emitter.emit("sendEmail", {
         to: process.env.ORDER_RECEIVER_EMAIL,
@@ -114,7 +121,7 @@ class OrderService {
       });
     }
 
-    // send telegram message
+    // send telegram message if enabled
     if (process.env.TELEGRAM_BOT_ACTIVATE == "ON") {
       const telegramMessage = `
 🛒 *طلب جديد*
@@ -156,6 +163,12 @@ ${additionalInfo || "لا يوجد"}
 
     res.status(201).json(SuccessResponse("تمت إضافة الطلب", 201));
   };
+
+  /**
+   * Get paginated list of orders (admin view).
+   * @param {Request} req - Express request (query: page, limit, filter)
+   * @param {Response} res - Express response
+   */
   getAllOrders = async (req: Request, res: Response) => {
     const { page = 1, limit = 10, filter } = req.query;
 
@@ -183,6 +196,12 @@ ${additionalInfo || "لا يوجد"}
 
     res.status(200).json({ orders: orders.docs });
   };
+
+  /**
+   * Soft-delete an order by id (marks as deleted by admin).
+   * @param {Request} req - Express request (params: orderId)
+   * @param {Response} res - Express response
+   */
   deleteOrder = async (req: Request, res: Response) => {
     const { orderId } = req.params;
     const order = await this.orderRep.findOneDocument({ _id: orderId });
@@ -194,6 +213,12 @@ ${additionalInfo || "لا يوجد"}
 
     res.status(200).json(SuccessResponse("تم حذف الطلب بنجاح"));
   };
+
+  /**
+   * Change the state of an order.
+   * @param {Request} req - Express request (params: orderId, body: state)
+   * @param {Response} res - Express response
+   */
   changeOrderState = async (req: Request, res: Response) => {
     const { orderId } = req.params;
     const { state } = req.body;
@@ -207,6 +232,12 @@ ${additionalInfo || "لا يوجد"}
 
     res.status(200).json(SuccessResponse("تم تغير حالة الاوردر بنجاح"));
   };
+
+  /**
+   * Get orders for the authenticated user.
+   * @param {Request} req - Express request (auth required)
+   * @param {Response} res - Express response
+   */
   getUserOrders = async (req: Request, res: Response) => {
     // get user Id
     const { userID } = (req as IAuthRequest).loggedInUser;
@@ -243,6 +274,12 @@ ${additionalInfo || "لا يوجد"}
 
     res.status(200).json(SuccessResponse("هنا طلباتك", 200, userOrders));
   };
+
+  /**
+   * Get a specific order belonging to the authenticated user.
+   * @param {Request} req - Express request (params: orderId)
+   * @param {Response} res - Express response
+   */
   getSpecificOrder = async (req: Request, res: Response) => {
     // get user and order IDs
     const { userID } = (req as IAuthRequest).loggedInUser;

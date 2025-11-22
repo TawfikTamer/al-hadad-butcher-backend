@@ -1,24 +1,33 @@
 import { Router } from "express";
 import AdminService from "./admin.service";
-import { localUpload, validationMiddleware } from "../../Middlewares";
-import { authenticationMiddleware } from "../../Middlewares/authentication.middleware";
+
+import {
+  localUpload,
+  validationMiddleware,
+  authenticationMiddleware,
+} from "../../Middlewares";
+
 import {
   addProductValidator,
   signInValidator,
   updateProductValidator,
 } from "../../Utils";
 
+// Create router for admin module
 const adminRouter = Router();
 
+// Auth routes
 adminRouter.post(
   "/signIn",
   validationMiddleware(signInValidator),
   AdminService.signIn
 );
 
+// Auth check and logout
 adminRouter.get("/userAuth", authenticationMiddleware, AdminService.userAuth);
 adminRouter.post("/logOut", authenticationMiddleware, AdminService.logOut);
 
+// Product management routes (create/update)
 adminRouter.post(
   "/add-product",
   authenticationMiddleware,
@@ -35,6 +44,7 @@ adminRouter.patch(
   AdminService.updateProduct
 );
 
+// Product deletion routes
 adminRouter.delete(
   "/soft-delete-product/:productID",
   authenticationMiddleware,
@@ -47,4 +57,5 @@ adminRouter.delete(
   AdminService.hardDeleteProduct
 );
 
+// Export admin router
 export { adminRouter };
