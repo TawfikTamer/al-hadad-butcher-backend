@@ -41,7 +41,11 @@ deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
 deleteUnlinkedPhotosCronJob();
 
 // --- Middlewares ---
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
