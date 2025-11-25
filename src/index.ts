@@ -2,6 +2,7 @@ import "./config";
 import express, { Response, Request, NextFunction } from "express";
 import fs from "node:fs";
 import cors from "cors";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { dbConnection } from "./DB/db.connection";
 import { deleteOrdersCronJob, FailedResponse, HttpException } from "./Utils";
@@ -34,6 +35,7 @@ const corsOptions = {
 deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
 
 // --- Middlewares ---
+app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
