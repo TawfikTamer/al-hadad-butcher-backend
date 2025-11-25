@@ -3,5 +3,5 @@ export enum fileTypeEnum {
 }
 
 export const fileExtensionsEnum = {
-  [fileTypeEnum.image]: ["png", "jpg", "jpeg"],
+  [fileTypeEnum.image]: ["png", "jpg", "jpeg", "webp"],
 };
