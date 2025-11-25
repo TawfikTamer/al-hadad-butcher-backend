@@ -1,6 +1,7 @@
 // import fs from "node:fs";
 import cron from "node-cron";
 import { ProductRepository } from "../../DB/Repositories";
+import fs from "node:fs";
 
 const productRepo = new ProductRepository();
 export const deleteUnlinkedPhotosCronJob = async (
@@ -18,8 +19,8 @@ export const deleteUnlinkedPhotosCronJob = async (
 
     console.log(paths);
 
-    // let dic = fs.readdirSync("Uploads/product Images");
-    // console.log(dic);
+    let dic = fs.readdirSync("Uploads/Uploads");
+    console.log(dic);
   });
 };
 
