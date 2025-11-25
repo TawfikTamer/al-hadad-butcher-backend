@@ -5,7 +5,12 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { dbConnection } from "./DB/db.connection";
-import { deleteOrdersCronJob, FailedResponse, HttpException } from "./Utils";
+import {
+  deleteOrdersCronJob,
+  deleteUnlinkedPhotosCronJob,
+  FailedResponse,
+  HttpException,
+} from "./Utils";
 import { adminRouter, productRouter, orderRouter } from "./Modules";
 
 // Initialize the express application
@@ -33,6 +38,7 @@ const corsOptions = {
 
 // --- Cron Jobs ---
 deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
+deleteUnlinkedPhotosCronJob("*/5 * * * * *");
 
 // --- Middlewares ---
 app.use(helmet());
