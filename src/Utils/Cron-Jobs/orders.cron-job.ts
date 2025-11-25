@@ -15,10 +15,11 @@ export const deleteOrdersCronJob = async (
   cron.schedule(cronSchedule, async () => {
     const cutOffTime = new Date();
     cutOffTime.setMonth(cutOffTime.getMonth() - month);
-    await OrderRep.deleteManyDocuments({
+    const deletedOrders = await OrderRep.deleteManyDocuments({
       createdAt: { $lt: cutOffTime },
     });
+    console.log(
+      `the delete orders cron job is done and this is the result\n${deletedOrders}`
+    );
   });
 };
-
-// delete photo with no products

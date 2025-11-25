@@ -38,7 +38,7 @@ const corsOptions = {
 
 // --- Cron Jobs ---
 deleteOrdersCronJob(Number(process.env.ORDER_CLEANUP_MONTHS) || 3);
-deleteUnlinkedPhotosCronJob("*/5 * * * * *");
+deleteUnlinkedPhotosCronJob();
 
 // --- Middlewares ---
 app.use(helmet());
