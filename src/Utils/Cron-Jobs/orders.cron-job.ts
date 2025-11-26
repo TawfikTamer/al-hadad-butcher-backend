@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { OrderRepository } from "../../DB/Repositories";
+import { DeleteResult } from "mongoose";
 
 const OrderRep = new OrderRepository();
 export const deleteOrdersCronJob = async (
@@ -18,8 +19,11 @@ export const deleteOrdersCronJob = async (
     const deletedOrders = await OrderRep.deleteManyDocuments({
       createdAt: { $lt: cutOffTime },
     });
-    console.log(
-      `the delete orders cron job is done and this is the result\n${deletedOrders}`
-    );
+    console.log(`the delete orders cron job is triggered.`);
+    if ((deletedOrders as DeleteResult).deletedCount) {
+      console.log(
+        `The deleted orders are ${(deletedOrders as DeleteResult).deletedCount}`
+      );
+    }
   });
 };

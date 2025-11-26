@@ -187,6 +187,7 @@ ${additionalInfo || "لا يوجد"}
       {
         limit: currentLimit,
         page: Number(page),
+        sort: { createdAt: -1 },
         populate: {
           path: "orderItem.productId",
           select: "-createdAt -__v -price -isAvailable",
