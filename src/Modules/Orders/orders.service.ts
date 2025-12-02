@@ -170,32 +170,39 @@ ${additionalInfo || "لا يوجد"}
    * @param {Response} res - Express response
    */
   getAllOrders = async (req: Request, res: Response) => {
-    const { page = 1, limit = 10, filter } = req.query;
-
-    const { limit: currentLimit } = pagination({
-      page: Number(page),
-      limit: Number(limit),
-    });
+    const { page = 1, limit = "all", filter } = req.query;
 
     let pageFilter = filter == "all" ? Object.values(orderStateEnum) : [filter];
 
-    const orders = await this.orderRep.orderPagination(
-      {
+    let totalOrders;
+    if (!limit || limit == "all") {
+      totalOrders = await this.orderRep.findDocuments({
         deletedByAdmin: false,
         orderState: { $in: pageFilter },
-      },
-      {
-        limit: currentLimit,
+      });
+    } else {
+      const { limit: currentLimit } = pagination({
         page: Number(page),
-        sort: { createdAt: -1 },
-        populate: {
-          path: "orderItem.productId",
-          select: "-createdAt -__v -price -isAvailable",
+        limit: Number(limit),
+      });
+      const orders = await this.orderRep.orderPagination(
+        {
+          deletedByAdmin: false,
+          orderState: { $in: pageFilter },
         },
-      }
-    );
-
-    res.status(200).json({ orders: orders.docs });
+        {
+          limit: currentLimit,
+          page: Number(page),
+          sort: { createdAt: -1 },
+          populate: {
+            path: "orderItem.productId",
+            select: "-createdAt -__v -price -isAvailable",
+          },
+        }
+      );
+      totalOrders = orders.docs;
+    }
+    res.status(200).json({ orders: totalOrders });
   };
 
   /**
