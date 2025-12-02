@@ -176,10 +176,16 @@ ${additionalInfo || "لا يوجد"}
 
     let totalOrders;
     if (!limit || limit == "all") {
-      totalOrders = await this.orderRep.findDocuments({
-        deletedByAdmin: false,
-        orderState: { $in: pageFilter },
-      });
+      totalOrders = await this.orderRep.findDocuments(
+        {
+          deletedByAdmin: false,
+          orderState: { $in: pageFilter },
+        },
+        {},
+        {
+          sort: { createdAt: -1 },
+        }
+      );
     } else {
       const { limit: currentLimit } = pagination({
         page: Number(page),
