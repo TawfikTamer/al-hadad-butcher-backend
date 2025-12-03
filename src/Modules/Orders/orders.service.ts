@@ -184,6 +184,10 @@ ${additionalInfo || "لا يوجد"}
         {},
         {
           sort: { createdAt: -1 },
+          populate: {
+            path: "orderItem.productId",
+            select: "-createdAt -__v -price -isAvailable",
+          },
         }
       );
     } else {
