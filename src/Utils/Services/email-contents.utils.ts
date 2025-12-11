@@ -8,7 +8,7 @@ export const newOrderContent = (order: any) => {
     additionalInfo,
     orderDate,
     orderPrice = 0,
-    delivieryPrice = 0,
+    deliveryPrice = 0,
     totalPrice = 0,
     orderItemsHtml,
   } = order;
@@ -118,7 +118,7 @@ export const newOrderContent = (order: any) => {
           <span style="font-weight: bold">مجموع الطلب:</span> ${orderPrice} ج.م
         </div>
         <div style="margin-bottom: 10px; text-align: right;">
-          <span style="font-weight: bold">التوصيل:</span> ${delivieryPrice} ج.م
+          <span style="font-weight: bold">التوصيل:</span> ${deliveryPrice} ج.م
         </div>
         <div style="font-weight: bold; color: #c40000; text-align: right; font-size: 20px; padding-top: 10px; border-top: 1px solid #eee;">
           <span style="color: #000">المجموع الكلي:</span> ${totalPrice} ج.م

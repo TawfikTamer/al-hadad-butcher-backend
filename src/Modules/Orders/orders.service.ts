@@ -34,7 +34,7 @@ class OrderService {
       orderItem,
       additionalInfo,
       orderPrice,
-      delivieryPrice,
+      deliveryPrice,
       totalPrice,
     } = req.body as IOrders;
     // get user Id
@@ -70,7 +70,7 @@ class OrderService {
       additionalInfo,
       userID,
       orderPrice,
-      delivieryPrice,
+      deliveryPrice,
       totalPrice,
     });
 
@@ -115,7 +115,7 @@ class OrderService {
           additionalInfo: additionalInfo || `لا يوجد`,
           orderDate: new Date().toLocaleString(),
           orderPrice,
-          delivieryPrice,
+          deliveryPrice,
           totalPrice,
         }),
       });
@@ -128,11 +128,11 @@ class OrderService {
 ━━━━━━━━━━━━━━━
 
 👤 *بيانات العميل:*
-• الاسم: ${fullName}
-• الهاتف: ${phoneNumber}
-• الإيميل: ${email}
-• المنطقة: ${zone}
-• العنوان: ${address}
+- الاسم: ${fullName}
+- الهاتف: ${phoneNumber}
+- الإيميل: ${email}
+- المنطقة: ${zone}
+- العنوان: ${address}
 
 📦 *تفاصيل الطلب:*
 ${orderItemsTelegram
@@ -146,7 +146,9 @@ ${orderItemsTelegram
 ${additionalInfo || "لا يوجد"}
 
 💰 *الحساب:*
-• سعر الطلب: ${orderPrice} ج.م
+- سعر الطلب: ${orderPrice} ج.م
+- سعر التوصيل: ${deliveryPrice} ج.م
+- الإجمالي: ${Number(orderPrice) + Number(deliveryPrice)} ج.م
 
 🕐 ${new Date().toLocaleString("ar-EG")}
 ━━━━━━━━━━━━━━━
