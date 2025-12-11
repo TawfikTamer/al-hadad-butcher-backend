@@ -16,7 +16,10 @@ export const createOrderValidator = {
     email: z.email("البريد الإلكتروني غير صحيح"),
     phoneNumber: z
       .string()
-      .regex(/^(010|011|012|015)[0-9]{8}$/, "رقم الهاتف غير صحيح"),
+      .regex(
+        /^(010|011|012|015|٠١٠|٠١١|٠١٢|٠١٥)[0-9٠-٩]{8}$/,
+        "رقم الهاتف غير صحيح"
+      ),
     zone: z.string("لم يتم اخيار منطقة"),
     address: z.string().regex(/[a-zA-Z\u0600-\u06FF]/, "العنوان غير صحيح"),
     orderItem: z.array(orderItemValidator),

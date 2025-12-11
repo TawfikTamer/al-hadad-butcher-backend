@@ -4,12 +4,9 @@ import { categoryEnum } from "../../Common";
 export const signInValidator = {
   body: z.strictObject({
     email: z.email("بريد الكتروني غير صحيح"),
-    password: z
-      .string()
-      .regex(
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/,
-        "كلمة المرور يجب أن تحتوي على 8 أحرف، حرف، رقم، ورمز خاص"
-      ),
+    password: z.string(
+      "كلمة المرور يجب أن تحتوي على 8 أحرف، حرف، رقم، ورمز خاص"
+    ),
   }),
 };
 export const addProductValidator = {
