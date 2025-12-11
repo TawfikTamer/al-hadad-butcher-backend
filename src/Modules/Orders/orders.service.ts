@@ -34,7 +34,7 @@ class OrderService {
       orderItem,
       additionalInfo,
       orderPrice,
-      deliveryPrice,
+      delivieryPrice,
       totalPrice,
     } = req.body as IOrders;
     // get user Id
@@ -70,7 +70,7 @@ class OrderService {
       additionalInfo,
       userID,
       orderPrice,
-      deliveryPrice,
+      delivieryPrice,
       totalPrice,
     });
 
@@ -115,7 +115,7 @@ class OrderService {
           additionalInfo: additionalInfo || `لا يوجد`,
           orderDate: new Date().toLocaleString(),
           orderPrice,
-          deliveryPrice,
+          delivieryPrice,
           totalPrice,
         }),
       });
@@ -147,8 +147,8 @@ ${additionalInfo || "لا يوجد"}
 
 💰 *الحساب:*
 - سعر الطلب: ${orderPrice} ج.م
-- سعر التوصيل: ${deliveryPrice} ج.م
-- الإجمالي: ${Number(orderPrice) + Number(deliveryPrice)} ج.م
+- سعر التوصيل: ${delivieryPrice} ج.م
+- الإجمالي: ${Number(orderPrice) + Number(delivieryPrice)} ج.م
 
 🕐 ${new Date().toLocaleString("ar-EG")}
 ━━━━━━━━━━━━━━━

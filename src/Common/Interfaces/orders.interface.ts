@@ -21,5 +21,5 @@ export interface IOrders extends Document {
   orderState: orderStateEnum;
   totalPrice: Number;
   orderPrice: Number;
-  deliveryPrice: Number;
+  delivieryPrice: Number;
 }

@@ -63,7 +63,7 @@ const orderSchema = new mongoose.Schema<IOrders>(
       type: Number,
       required: true,
     },
-    deliveryPrice: {
+    delivieryPrice: {
       type: Number,
       required: true,
     },

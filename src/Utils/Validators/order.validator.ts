@@ -25,7 +25,7 @@ export const createOrderValidator = {
     orderItem: z.array(orderItemValidator),
     additionalInfo: z.string().optional(),
     orderPrice: z.number().min(0),
-    deliveryPrice: z.number().min(0),
+    delivieryPrice: z.number().min(0),
     totalPrice: z.number().min(0),
   }),
 };
