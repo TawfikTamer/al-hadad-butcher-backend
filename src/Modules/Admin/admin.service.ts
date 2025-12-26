@@ -47,8 +47,8 @@ class AdminService {
       .status(200)
       .cookie("accesstoken", accesstoken, {
         httpOnly: true, // Prevent client-side access
-        sameSite: "none",
-        secure: true,
+        sameSite: "lax",
+        secure: false, // true in production
         maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       })
       .json(SuccessResponse("تم تسجيل الدخول بنجاح", 200, { accesstoken }));
@@ -62,7 +62,7 @@ class AdminService {
   logOut = async (req: Request, res: Response) => {
     res.clearCookie("accesstoken", {
       httpOnly: true, // Prevent client-side access
-      sameSite: "none",
+      sameSite: "lax",
       secure: true,
     });
 
@@ -143,7 +143,11 @@ class AdminService {
     if (category) product.category = category;
     if (isAvailable) product.isAvailable = isAvailable;
     if (imagefile) {
-      if (product.imagePath && product.imagePath != "NO path")
+      if (
+        product.imagePath &&
+        product.imagePath != "NO path" &&
+        fs.existsSync(product.imagePath)
+      )
         fs.unlinkSync(product.imagePath);
       product.image = imagefile.filename;
       product.imagePath = imagefile.path;
@@ -171,11 +175,6 @@ class AdminService {
     // soft delete the product
     product.isDeleted = true;
     await product.save();
-
-    // delete the image of the product
-    if (product.imagePath && product.imagePath != "NO path") {
-      fs.unlinkSync(product.imagePath as string);
-    }
 
     return res.status(200).json(SuccessResponse("تم حذف المنتج بنجاح", 200));
   };
