@@ -44,8 +44,8 @@ export const authorizationMiddleware = async (
   };
   res.cookie("guestUser", guestUserToken, {
     httpOnly: true, // Prevent client-side access
-    sameSite: "none",
-    secure: true,
+    sameSite: process.env.NODE_ENV == "production" ? "none" : "lax",
+    secure: process.env.NODE_ENV == "production",
     maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
   });
 

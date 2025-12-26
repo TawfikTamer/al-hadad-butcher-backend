@@ -47,8 +47,8 @@ class AdminService {
       .status(200)
       .cookie("accesstoken", accesstoken, {
         httpOnly: true, // Prevent client-side access
-        sameSite: "lax",
-        secure: false, // true in production
+        sameSite: process.env.NODE_ENV == "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV == "production",
         maxAge: 90 * 24 * 60 * 60 * 1000, // 90 days
       })
       .json(SuccessResponse("تم تسجيل الدخول بنجاح", 200, { accesstoken }));
@@ -62,8 +62,8 @@ class AdminService {
   logOut = async (req: Request, res: Response) => {
     res.clearCookie("accesstoken", {
       httpOnly: true, // Prevent client-side access
-      sameSite: "lax",
-      secure: true,
+      sameSite: process.env.NODE_ENV == "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV == "production",
     });
 
     res.status(200).json(SuccessResponse("تم تسجيل الخروج بنجاح", 200));
